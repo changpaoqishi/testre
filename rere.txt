@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <algorithm>
+using namespace std;
+
+map<char, int> charOrderMapping;
+
+bool customSortFunction(const string& firstString, const string& secondString) {
+    int minLength = min(firstString.length(), secondString.length());
+
+    for (int index = 0; index < minLength; index++) {
+        char charA = firstString[index];
+        char charB = secondString[index];
+
+        if ((islower(charA) && islower(charB)) || (isupper(charA) && isupper(charB))) {
+            if (charOrderMapping[tolower(charA)] == charOrderMapping[tolower(charB)]) {
+                continue;
+            } else {
+                return charOrderMapping[tolower(charA)] < charOrderMapping[tolower(charB)];
+            }
+        } else if (isupper(charA)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    return firstString.length() < secondString.length();
+}
+
+int main() {
+    string permutationOrder;
+    int numStrings;
+    
+    cin >> permutationOrder;
+    cin >> numStrings;
+
+    for (int i = 0; i < permutationOrder.length(); i++) {
+        charOrderMapping[permutationOrder[i]] = i;
+    }
+
+    vector<string> inputStrings(numStrings);
+    for (int i = 0; i < numStrings; i++) {
+        cin >> inputStrings[i];
+    }
+
+    sort(inputStrings.begin(), inputStrings.end(), customSortFunction);
+
+    for (const auto& str : inputStrings) {
+        cout << str << endl;
+    }
+
+    return 0;
+}
